@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dev Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #c0392b;
+      --red-dark: #922b21;
+      --red-dim: #7b241c;
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface-2: #1a1a1a;
+      --border: rgba(192, 57, 43, 0.2);
+      --text: #e8e8e8;
+      --text-muted: #888;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 0.08em;
+      color: var(--red);
+    }
+
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--red); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      overflow: hidden;
+    }
+
+    /* diagonal red line decoration */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -5%;
+      width: 60%;
+      height: 120%;
+      background: linear-gradient(135deg, transparent 40%, rgba(192,57,43,0.04) 100%);
+      border-left: 1px solid rgba(192,57,43,0.12);
+      transform: skewX(-8deg);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--red);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--red);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 9vw, 8rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.4s forwards;
+    }
+
+    h1 span { color: var(--red); }
+
+    .hero-desc {
+      max-width: 520px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 2.8rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.6s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: var(--red-dark);
+      color: #fff;
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid var(--red);
+      transition: background 0.2s, transform 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .hero-cta:hover { background: var(--red); transform: translateY(-2px); }
+    .hero-cta svg { transition: transform 0.2s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+
+    /* big background text */
+    .hero-bg-text {
+      position: absolute;
+      bottom: -2rem;
+      right: -1rem;
+      font-family: var(--font-display);
+      font-size: clamp(8rem, 18vw, 18rem);
+      color: rgba(192,57,43,0.04);
+      letter-spacing: -0.02em;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+      /* subtle float */
+      animation: heroFloat 7s ease-in-out infinite;
+    }
+
+    /* canvas particles layer */
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* parallax container */
+    .hero-parallax {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+
+    /* floating orb 1 */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0;
+      animation: orbReveal 1.2s 1s forwards;
+    }
+    .hero-orb-1 {
+      width: 420px; height: 420px;
+      top: -60px; right: 10%;
+      background: radial-gradient(circle, rgba(192,57,43,0.18) 0%, transparent 70%);
+    }
+    .hero-orb-2 {
+      width: 280px; height: 280px;
+      bottom: 5%; left: 35%;
+      background: radial-gradient(circle, rgba(146,43,33,0.12) 0%, transparent 70%);
+      animation-delay: 1.3s;
+    }
+
+    /* scanning line */
+    .hero-scan {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(192,57,43,0.25), transparent);
+      top: 0;
+      animation: scanLine 6s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* cursor typing caret */
+    .caret {
+      display: inline-block;
+      width: 2px;
+      height: 0.85em;
+      background: var(--red);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: caretBlink 0.9s step-end infinite;
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-14px); }
+    }
+
+    @keyframes orbReveal {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes scanLine {
+      0%   { top: 0%;   opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 0.6; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    @keyframes caretBlink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 6rem 4rem; position: relative; z-index: 1; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--red);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 20px; height: 1px;
+      background: var(--red);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 3.5rem;
+      line-height: 1;
+    }
+
+    /* ── EXPERIENCE ── */
+    #experiencia { background: var(--surface); }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .exp-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--red);
+      transition: height 0.3s ease;
+    }
+    .exp-card:hover::before { height: 100%; }
+    .exp-card:hover {
+      border-color: var(--red-dim);
+      transform: translateY(-4px);
+    }
+
+    .exp-icon {
+      width: 44px; height: 44px;
+      background: rgba(192,57,43,0.12);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.2rem;
+      color: var(--red);
+      font-size: 1.2rem;
+    }
+
+    .exp-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .exp-years {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--red);
+      margin-top: 1rem;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── PROJECTS ── */
+    #projetos { background: var(--black); }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .proj-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+      cursor: pointer;
+    }
+    .proj-card:hover { transform: translateY(-6px); border-color: var(--red-dim); }
+
+    .proj-thumb {
+      height: 180px;
+      background: var(--surface-2);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: rgba(192,57,43,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .proj-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .proj-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(192,57,43,0.06), transparent);
+    }
+
+    .proj-body { padding: 1.6rem; }
+    .proj-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .proj-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .proj-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    .proj-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.2rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--red);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: gap 0.2s;
+    }
+    .proj-link:hover { gap: 0.7rem; }
+
+    /* ── FLOATING CTA ── */
+    .float-cta {
+      position: fixed;
+      bottom: 2.4rem;
+      right: 2.4rem;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: var(--red-dark);
+      color: #fff;
+      padding: 1rem 1.6rem;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid var(--red);
+      box-shadow: 0 8px 32px rgba(192,57,43,0.35);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      animation: pulse-shadow 2.5s ease-in-out infinite;
+    }
+    .float-cta:hover {
+      background: var(--red);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(192,57,43,0.55);
+      animation: none;
+    }
+
+    .float-cta .dot {
+      width: 8px; height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    footer strong { color: var(--red); font-family: var(--font-display); letter-spacing: 0.06em; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--red-dim), transparent);
+      margin: 0;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-shadow {
+      0%, 100% { box-shadow: 0 8px 32px rgba(192,57,43,0.35); }
+      50%       { box-shadow: 0 8px 48px rgba(192,57,43,0.6); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      #hero { padding: 7rem 1.5rem 3rem; }
+      section { padding: 4rem 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+      .float-cta { bottom: 1.5rem; right: 1.5rem; padding: 0.85rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">DEV<span style="color:var(--text);opacity:.3">.</span></div>
+    <ul class="nav-links">
+      <li><a href="#hero">Início</a></li>
+      <li><a href="#experiencia">Experiência</a></li>
+      <li><a href="#projetos">Projetos</a></li>
+      <li><a href="mailto:seuemail@email.com">Contato</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <!-- animated background layers -->
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-scan"></div>
+    <div class="hero-parallax" id="hero-parallax">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-eyebrow"><span id="typing-text"></span><span class="caret"></span></div>
+      <h1>Criando sites<br/><span>que vendem.</span></h1>
+      <p class="hero-desc">
+        Transformo ideias em presença digital. Sites rápidos, modernos e construídos
+        para converter visitantes em clientes reais.
+      </p>
+      <a href="#projetos" class="hero-cta">
+        Ver projetos
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="hero-bg-text">WEB</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- EXPERIENCE -->
+  <section id="experiencia">
+    <div class="section-label">Expertise</div>
+    <h2 class="section-title reveal">O que eu entrego</h2>
+
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>Desenvolvimento Web</h3>
+        <p>Sites e landing pages do zero, com foco em performance, responsividade e código limpo. HTML, CSS e JavaScript puro.</p>
+        <span class="exp-years">3+ anos de experiência</span>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Design de Interface</h3>
+        <p>Layouts pensados para o usuário. Hierarquia visual, tipografia e cores que constroem confiança e direcionam a ação.</p>
+        <span class="exp-years">UI/UX · Figma · Prototipação</span>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>Otimização &amp; SEO</h3>
+        <p>Sites rápidos e encontráveis. Boas práticas de SEO técnico, Core Web Vitals e otimização de carregamento para ranquear melhor.</p>
+        <span class="exp-years">Google PageSpeed · Core Web Vitals</span>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Sites de Alta Conversão</h3>
+        <p>Cada elemento posicionado com intenção. CTAs estratégicos, copywriting visual e estrutura pensada para gerar resultado.</p>
+        <span class="exp-years">Landing Pages · E-commerce · Portfólios</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <section id="projetos">
+    <div class="section-label">Portfólio</div>
+    <h2 class="section-title reveal">Projetos recentes</h2>
+
+    <div class="proj-grid">
+      <div class="proj-card reveal">
+        <div class="proj-thumb"><img src="assets/EBOOK.png" alt="Prompts que Vendem"></div>
+        <div class="proj-body">
+          <div class="proj-tag">Landing Page</div>
+          <h3>Prompts que Vendem</h3>
+          <p>Landing page focada em conversão para venda de prompts e materiais digitais.</p>
+          <a href="https://promptsquevendem.vercel.app/" class="proj-link" target="_blank" rel="noopener">
+            Visitar site
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-thumb"><img src="assets/CEMANTIC.png" alt="Cinematic Canvas"></div>
+        <div class="proj-body">
+          <div class="proj-tag">Site</div>
+          <h3>Cinematic Canvas</h3>
+          <p>Site com estética cinematográfica e interação visual, ideal para portfólios e projetos visuais.</p>
+          <a href="https://cinematic-canvas-sigma.vercel.app/" class="proj-link" target="_blank" rel="noopener">
+            Visitar site
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-thumb"><img src="assets/VOID.png" alt="Elevate Studio"></div>
+        <div class="proj-body">
+          <div class="proj-tag">Site Internacional</div>
+          <h3>Elevate Studio</h3>
+          <p>Site voltado para público internacional — projeto para "gringa" com foco em apresentação de serviços e portfólio.</p>
+          <a href="https://elevate-studio-ten.vercel.app/" class="proj-link" target="_blank" rel="noopener">
+            Visitar site
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div><strong>DEV</strong> — Portfólio</div>
+    <div>© 2025 · Todos os direitos reservados</div>
+  </footer>
+
+  <!-- FLOATING CTA -->
+  <a href="https://wa.me/5581995250365?text=Ol%C3%A1!%20Quero%20solicitar%20um%20site" class="float-cta" target="_blank">
+    <span class="dot"></span>
+    Solicitar um site
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+
+  <script>
+    /* ── 1. SCROLL REVEAL ── */
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const siblings = [...entry.target.parentElement.children];
+          const idx = siblings.indexOf(entry.target);
+          entry.target.style.transitionDelay = `${idx * 0.08}s`;
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    /* ── 2. TYPING EFFECT ── */
+    const typingEl = document.getElementById('typing-text');
+    const fullText = 'Desenvolvedor Web & Designer Digital';
+    let i = 0;
+    function type() {
+      if (i <= fullText.length) {
+        typingEl.textContent = fullText.slice(0, i++);
+        setTimeout(type, i === 1 ? 600 : 55); // initial delay then per-char
+      }
+    }
+    type();
+
+    /* ── 3. CANVAS PARTICLES ── */
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+    class Particle {
+      constructor() { this.reset(true); }
+      reset(initial = false) {
+        this.x  = Math.random() * canvas.width;
+        this.y  = initial ? Math.random() * canvas.height : canvas.height + 10;
+        this.vy = -(0.15 + Math.random() * 0.25);   // drift upward slowly
+        this.vx = (Math.random() - 0.5) * 0.12;
+        this.r  = 0.8 + Math.random() * 1.4;
+        this.alpha = 0;
+        this.maxAlpha = 0.15 + Math.random() * 0.2;
+        this.life  = 0;
+        this.maxLife = 180 + Math.random() * 160;
+      }
+      update() {
+        this.life++;
+        this.x += this.vx;
+        this.y += this.vy;
+        // fade in / fade out
+        const progress = this.life / this.maxLife;
+        this.alpha = progress < 0.2
+          ? (progress / 0.2) * this.maxAlpha
+          : progress > 0.8
+            ? ((1 - progress) / 0.2) * this.maxAlpha
+            : this.maxAlpha;
+        if (this.life >= this.maxLife) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(192,57,43,${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = Array.from({ length: 55 }, () => new Particle());
+    }
+    initParticles();
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* ── 4. MOUSE PARALLAX (gentle) ── */
+    const parallaxEl = document.getElementById('hero-parallax');
+    document.addEventListener('mousemove', e => {
+      const cx = window.innerWidth  / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;  // -1 to 1
+      const dy = (e.clientY - cy) / cy;
+      // subtle: max 18px shift
+      parallaxEl.style.transform = `translate(${dx * 18}px, ${dy * 12}px)`;
+    });
+    document.addEventListener('mouseleave', () => {
+      parallaxEl.style.transform = 'translate(0,0)';
+    });
+    parallaxEl.style.transition = 'transform 1.2s cubic-bezier(0.22,1,0.36,1)';
+  </script>
+</body>
+</html>
